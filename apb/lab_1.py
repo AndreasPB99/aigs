@@ -138,13 +138,18 @@ x = jnp.array(3.0)
 def f(x: Array) -> Array:
     return x**2 + 2 * x + 1
 
+def df(x):
+    return 2 * x + 2
 
 def f_prime(fn: Callable, x: Array, h: float) -> Array:
-    return 0
+    return (fn(x+h)-fn(x-h))/2*h
 
 h = 2
-print(f'f_prime: {f_prime(f, x, h)}, grad: {grad(f)(x)}')
+print(f'f_prime: {f_prime(df, x, h)}, grad: {grad(f)(x)}')
 #grad(f)(x)  # <-- Your solution here instead of this cheating line
+
+print('')
+print('')
 
 # %% Question seven [markdown]
 # `g` takes in two vectors parameters `a` and `b` and a vector `x`.
@@ -160,7 +165,9 @@ def g(a: Array, b: Array, x: Array) -> Array:
 x = jnp.array([1.0, 2.0, 3.0])
 y = jnp.array([2.0, 3.0, 4.0])
 
-a = jnp.array(0.0)
-b = jnp.array(0.0)
+a = jnp.array(1.0)
+b = jnp.array(1.0)
 
 y_hat = g(a, b, x)
+
+print(y_hat, y)
