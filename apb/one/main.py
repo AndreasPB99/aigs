@@ -1,6 +1,6 @@
 # %% Imports (add as needed) #############################################
 import gymnasium as gym  # not jax based
-from jax import random, nn
+from jax import random, nn, numpy as jnp
 from tqdm import tqdm
 from collections import deque, namedtuple
 
@@ -35,7 +35,8 @@ def model(params, x_data):
     return z
 
 def convert_to_action(input):
-    return int(round(max(input)))
+    best = jnp.argmax(input)
+    return best.item()
 
 def random_policy_fn(env, rng, obs): # action (shape: ())
     n = env.action_space.__dict__['n']
@@ -48,9 +49,15 @@ def your_policy_fn(env, rng, obs):  # obs (shape: (2,)) to action (shape: ())
     return random_policy_fn(env, rng, obs)
 
 
+def loss_fn():
+    raise NotImplementedError
+
 def train_mlp(params, memory):
-    while memory:
-        value = memory.popleft()
+    for i in memory:
+        # grad af loss (formel fra slides)
+        # params = tree.map(lambda p, g: p - 0.01 * g, params, grads)  # <- update parameters
+        # print(i)
+        pass
     return params
 
 def run_episode(env, rng):
@@ -66,7 +73,11 @@ def run_episode(env, rng):
         test = model(params, obs)
         my_action = convert_to_action(test)
 
-        next_obs, reward, terminated, truncated, info = env.step(my_action)
+        next_obs, reward, terminated, truncated, info = env.step(action)
+
+        if terminated or truncated: # makes reward negative if the game is lost
+            reward -= 10
+
         l_memory.append(entry(obs, action, reward, next_obs, terminated | truncated))
         obs, info = next_obs, info if not (terminated | truncated) else env.reset()
 
