@@ -15,7 +15,7 @@ def run():
     env = gym.make("CartPole-v1",  render_mode="human")
     rng = random.PRNGKey(0)
     run_iterations = 100
-    with open(f'{agent_file_name}.pickle', 'rb') as input_file:
+    with open(f'{agent_file_name}.pkl', 'rb') as input_file:
         params = pickle.load(input_file)
 
     obs, info = env.reset()
@@ -31,7 +31,7 @@ def train():
     obs, _ = make_agent_env.reset()
     params = init_mlp(len(obs), make_agent_env.action_space.__dict__['n'])
     make_agent_run_episode(make_agent_env, rng, obs, params)
-    with open(f'{agent_file_name}.pickle', 'wb') as output_file:
+    with open(f'{agent_file_name}.pkl', 'wb') as output_file:
         pickle.dump(params, output_file)
 
     # for episode in range(episodes):

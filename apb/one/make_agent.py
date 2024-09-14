@@ -64,7 +64,7 @@ def loss_fn(params, curr_obs, next_obs, reward, action):
     """
     return (reward + 0.1 * jnp.max(run_mlp(params, next_obs)) - run_mlp(params, curr_obs)[action])**2
 
-# Creates a just in time compiled version of the gradient of the loss function
+# Creates a just in time compiled version of the differentiated loss function
 grad_loss_fn = jit(grad(loss_fn))
 
 
