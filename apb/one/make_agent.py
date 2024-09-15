@@ -134,8 +134,4 @@ if __name__ == '__main__':
     with open('agent.pickle', 'wb') as output_file:
         pickle.dump(params, output_file)
 
-    # for episode in range(episodes):
-    #     new_memory = run_episode(env, rng)
-    #     memory.appendleft(new_memory)
-
     env.close()
